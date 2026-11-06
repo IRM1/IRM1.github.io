@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prox Sensor Motor Control Station | Muhammad Islam Riaz</title>
+  <meta name="description" content="Reverse-engineered CompactLogix training station with an NPN proximity sensor, motor and light control logic, Bill of Materials, panel layout, and wiring diagram.">
+  <meta name="theme-color" content="#070b14">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../"><span class="lights" aria-hidden="true"><span></span><span></span><span></span></span>Muhammad Islam Riaz</a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="../#about">About</a><a href="../#experience">Experience</a><a href="../#skills">Skills</a><a href="../#projects">Projects</a><a class="nav-cta" href="../#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="project-hero">
+    <div class="wrap">
+      <a class="back" href="../#projects">← All projects</a>
+      <h1>Prox Sensor Motor Control Station</h1>
+      <p>I reverse-engineered a PLC training station built on an Allen-Bradley CompactLogix 1769-L24ER-QB1B, integrated a 3-wire NPN inductive proximity sensor, programmed the control logic in Studio 5000, and documented the station with a Bill of Materials, panel layout and wiring diagram so it can be rebuilt.</p>
+      <ul class="tags"><li>Studio 5000</li><li>CompactLogix 1769-L24ER</li><li>NPN proximity sensor</li><li>Bill of Materials</li><li>Panel layout</li><li>Wiring diagram</li></ul>
+    </div>
+  </section>
+
+  <div class="wrap project-body">
+    <h2>Sensor wiring</h2>
+    <p>Brown to +24 VDC, blue to 0 VDC, black signal to <code>Local:1:I.Data.9</code>.</p>
+    <p class="callout">An NPN sensor sinks its output to 0 V, so it has to land in the 08–15 input group, whose common is tied to +24 V. On the wrong group the sensor LED lights up but the PLC never sees the signal.</p>
+
+    <h2>I/O map</h2>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Tag</th><th>Address</th></tr></thead>
+        <tbody>
+          <tr><td><code>red_button</code> (N.C.)</td><td><code>Local:1:I.Data.1</code></td></tr>
+          <tr><td><code>green_button</code> (N.O.)</td><td><code>Local:1:I.Data.2</code></td></tr>
+          <tr><td><code>sensor</code></td><td><code>Local:1:I.Data.9</code></td></tr>
+          <tr><td><code>motor</code></td><td><code>Local:1:O.Data.6</code></td></tr>
+          <tr><td><code>green_light</code></td><td><code>Local:1:O.Data.5</code></td></tr>
+          <tr><td><code>amber</code></td><td><code>Local:1:O.Data.4</code></td></tr>
+          <tr><td><code>red_light</code></td><td><code>Local:1:O.Data.3</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Logic</h2>
+    <ul>
+      <li><strong>Rung 0:</strong> Latches <code>RUN</code> from the green button, with the N.C. red stop examined with XIC (fail-safe).</li>
+      <li><strong>Rung 1:</strong> Runs the 24 VDC motor and green light while <code>RUN</code> is on and the sensor is clear.</li>
+      <li><strong>Rung 2:</strong> Turns on amber while <code>RUN</code> is on and metal is detected.</li>
+      <li><strong>Rung 3:</strong> Latches red when Stop is pressed and clears it on restart.</li>
+    </ul>
+
+    <h2>Design fix</h2>
+    <p>The first version had the sensor in series with the <code>RUN</code> seal-in, so a detection dropped the latch and the motor never restarted. Moving the latch to its own rung lets the station resume when the target clears.</p>
+
+    <h2>Testing</h2>
+    <p>On hardware: motor and green seal in, the sensor swaps motor/green for amber and back, Stop kills all outputs and latches red, and the sensor is ignored until the station is restarted.</p>
+
+    <h2>Bill of Materials</h2>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Mark</th><th>Qty</th><th>Description</th><th>Part No.</th></tr></thead>
+        <tbody>
+          <tr><td>PLC1</td><td>1</td><td>CompactLogix controller, embedded DC I/O</td><td>1769-L24ER-QB1B</td></tr>
+          <tr><td>PS1</td><td>1</td><td>24 VDC power supply</td><td>(station supply)</td></tr>
+          <tr><td>FU1</td><td>1</td><td>Fuse-holder terminal block, 24 VDC, blown-fuse LED</td><td>DN-F10L24</td></tr>
+          <tr><td>TB1</td><td>~20</td><td>Feed-through terminal blocks, 35 mm DIN</td><td>KN-T12GRY-25</td></tr>
+          <tr><td>PB-G</td><td>1</td><td>Push button, 22 mm, green, 1 N.O.</td><td>GCX1102</td></tr>
+          <tr><td>PB-R</td><td>1</td><td>Push button, 22 mm, red, 1 N.C.</td><td>GCX1101</td></tr>
+          <tr><td>PX1</td><td>1</td><td>Inductive prox sensor, M30, NPN, N.O., 3-wire, 15 mm</td><td>DW-AS-611-M30-002</td></tr>
+          <tr><td>M1</td><td>1</td><td>24 VDC permanent-magnet DC motor</td><td>OEM</td></tr>
+          <tr><td>LT-G</td><td>1</td><td>Pilot light, 22 mm, green, 24 VDC LED</td><td>GCX1232-24L</td></tr>
+          <tr><td>LT-A</td><td>1</td><td>Pilot light, 22 mm, amber, 24 VDC LED</td><td>GCX1233-24L</td></tr>
+          <tr><td>LT-R</td><td>1</td><td>Pilot light, 22 mm, red, 24 VDC LED</td><td>GCX1231-24L</td></tr>
+          <tr><td>WD1</td><td>as req'd</td><td>Wire duct with cover, 2.25" x 3"</td><td>T1-2230G-1</td></tr>
+          <tr><td>SW1</td><td>1</td><td>Main power switch, SPST toggle</td><td>generic</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Drawings &amp; screenshots</h2>
+    <div class="gallery">
+      <figure><a href="../assets/projects/prox-station/wiring-diagram.png"><img src="../assets/projects/prox-station/wiring-diagram.png" alt="Wiring diagram" loading="lazy"></a><figcaption>Wiring diagram.</figcaption></figure>
+      <figure><a href="../assets/projects/prox-station/panel-layout.png"><img src="../assets/projects/prox-station/panel-layout.png" alt="Panel layout" loading="lazy"></a><figcaption>Panel layout.</figcaption></figure>
+      <figure><a href="../assets/projects/prox-station/ladder.png"><img src="../assets/projects/prox-station/ladder.png" alt="Ladder logic" loading="lazy"></a><figcaption>Ladder logic program in Studio 5000.</figcaption></figure>
+    </div>
+
+    <div class="project-nav">
+      <a href="../#projects">← All projects</a>
+      <a href="https://github.com/IRM1/CONTROLS/tree/main/prox-sensor-motor-control-station">Project on GitHub →</a>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer"><div class="wrap"><span>© 2026 Muhammad Islam Riaz</span><span><a href="../">Home</a> · <a href="https://www.linkedin.com/in/muhammad-islam-riaz/">LinkedIn</a> · <a href="https://github.com/IRM1/CONTROLS">GitHub</a></span></div></footer>
+</body>
+</html>

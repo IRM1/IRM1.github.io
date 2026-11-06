@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Timed Motor Control | Muhammad Islam Riaz</title>
+  <meta name="description" content="CompactLogix ladder logic that runs a 24 VDC motor for 5 seconds with a TON timer, Stop/E-Stop handling, and a latched fault light.">
+  <meta name="theme-color" content="#070b14">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../"><span class="lights" aria-hidden="true"><span></span><span></span><span></span></span>Muhammad Islam Riaz</a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="../#about">About</a><a href="../#experience">Experience</a><a href="../#skills">Skills</a><a href="../#projects">Projects</a><a class="nav-cta" href="../#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="project-hero">
+    <div class="wrap">
+      <a class="back" href="../#projects">← All projects</a>
+      <h1>CompactLogix Timed Motor Control</h1>
+      <p>Pressing Start runs a 24 VDC motor and a green light for 5 seconds with a TON timer, then stops them and latches a red light. Stop or E-Stop during operation does the same immediately. Programmed in Studio 5000 and tested on a physical lab station.</p>
+      <ul class="tags"><li>Studio 5000</li><li>CompactLogix</li><li>RSLinx</li><li>TON timer</li><li>Seal-in</li><li>Fail-safe N.C. inputs</li></ul>
+    </div>
+  </section>
+
+  <div class="wrap project-body">
+    <h2>I/O map</h2>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Device</th><th>Address</th></tr></thead>
+        <tbody>
+          <tr><td>Start button (N.O.)</td><td><code>Local:1:I.Data.2</code></td></tr>
+          <tr><td>Stop button (N.C.)</td><td><code>Local:1:I.Data.1</code></td></tr>
+          <tr><td>E-Stop (N.C.)</td><td><code>Local:1:I.Data.0</code></td></tr>
+          <tr><td>Motor</td><td><code>Local:1:O.Data.6</code></td></tr>
+          <tr><td>Green light</td><td><code>Local:1:O.Data.2</code></td></tr>
+          <tr><td>Red light</td><td><code>Local:1:O.Data.0</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Logic highlights</h2>
+    <ul>
+      <li><strong>Rung 0:</strong> Seals in <code>system_run</code> from Start. N.C. Stop and E-Stop are examined with XIC, so a broken wire stops the machine.</li>
+      <li><strong>Rung 1:</strong> Runs the TON (5000 ms) while <code>system_run</code> is on.</li>
+      <li><strong>Rung 2:</strong> Runs the motor and green light until <code>timer.DN</code>, with Stop and E-Stop in series.</li>
+      <li><strong>Rung 3:</strong> Latches the red light on <code>timer.DN</code>, Stop, or E-Stop. Start clears it.</li>
+    </ul>
+
+    <h2>Debugging on hardware</h2>
+    <p>The first version sealed in the motor rung with no stop conditions of its own. Pressing Stop dropped <code>system_run</code>, which reset the timer and cleared DN. The XIO DN contact went true again, and the seal-in held the motor on with nothing to turn it off.</p>
+    <p class="callout"><strong>Lesson:</strong> a TON's DN bit doesn't remember that the timer finished, so a seal-in needs its own stop conditions.</p>
+
+    <h2>Safety note</h2>
+    <p>On production equipment the E-Stop is hardwired through a safety relay so it removes power independently of the PLC (NFPA 79 / ISO 13850). On this training station it is a PLC input.</p>
+
+    <h2>Planned improvements</h2>
+    <ul>
+      <li><strong>Automatic re-arm after timeout:</strong> add XIO <code>red_light</code> to the <code>system_run</code> rung so Start alone begins a new cycle.</li>
+      <li><strong>Red light only for a stop during operation:</strong> move the red-light rung above the <code>system_run</code> rung, so it reads <code>system_run</code> in the same scan before it drops.</li>
+    </ul>
+
+    <h2>Screenshots</h2>
+    <div class="gallery">
+      <figure><a href="../assets/projects/timed-motor/ladder.png"><img src="../assets/projects/timed-motor/ladder.png" alt="Four-rung ladder logic" loading="lazy"></a><figcaption>Four-rung ladder logic program in Studio 5000.</figcaption></figure>
+      <figure><a href="../assets/projects/timed-motor/station.jpg"><img src="../assets/projects/timed-motor/station.jpg" alt="Physical lab station" loading="lazy"></a><figcaption>Lab station: PLC, push buttons, E-Stop, pilot lights and DC motor, with the red light latched after the timed run.</figcaption></figure>
+    </div>
+
+    <div class="project-nav">
+      <a href="../#projects">← All projects</a>
+      <a href="https://github.com/IRM1/CONTROLS/tree/main/compactlogix-timed-motor-control">Source files on GitHub (.ACD) →</a>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer"><div class="wrap"><span>© 2026 Muhammad Islam Riaz</span><span><a href="../">Home</a> · <a href="https://www.linkedin.com/in/muhammad-islam-riaz/">LinkedIn</a> · <a href="https://github.com/IRM1/CONTROLS">GitHub</a></span></div></footer>
+</body>
+</html>

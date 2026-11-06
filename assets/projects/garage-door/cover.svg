@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" role="img" aria-label="Garage door with safety sensor beam and a four-state diagram">
+  <defs>
+    <pattern id="g" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#ffffff" stroke-opacity="0.04"/></pattern>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" fill="#94a0b8"/></marker>
+  </defs>
+  <rect width="640" height="400" fill="#0c1322"/>
+  <rect width="640" height="400" fill="url(#g)"/>
+
+  <!-- garage -->
+  <path d="M50 150 190 60 330 150" fill="none" stroke="#c9d2e3" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M70 140V340H310V140" fill="none" stroke="#c9d2e3" stroke-width="3"/>
+  <rect x="100" y="180" width="180" height="160" fill="#0a101c" stroke="#3a4766" stroke-width="2"/>
+  <!-- door panels, partly open -->
+  <g fill="#1c2638" stroke="#94a0b8" stroke-width="2">
+    <rect x="100" y="180" width="180" height="28"/>
+    <rect x="100" y="208" width="180" height="28"/>
+    <rect x="100" y="236" width="180" height="28"/>
+  </g>
+  <!-- direction arrow on door -->
+  <path d="M190 290v-30m-10 12 10-12 10 12" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- safety beam -->
+  <rect x="88" y="318" width="12" height="16" rx="2" fill="#ffb627"/>
+  <rect x="280" y="318" width="12" height="16" rx="2" fill="#ffb627"/>
+  <line x1="100" y1="326" x2="280" y2="326" stroke="#f87171" stroke-width="2" stroke-dasharray="6 6"/>
+  <line x1="40" y1="340" x2="340" y2="340" stroke="#2a3650" stroke-width="2"/>
+
+  <!-- state diagram -->
+  <g font-family="ui-monospace, Menlo, monospace" font-size="12" text-anchor="middle">
+    <g stroke-width="2" fill="#141d30">
+      <rect x="380" y="70" width="104" height="46" rx="23" stroke="#34d399"/>
+      <rect x="500" y="170" width="104" height="46" rx="23" stroke="#ffb627"/>
+      <rect x="380" y="270" width="104" height="46" rx="23" stroke="#f87171"/>
+    </g>
+    <rect x="352" y="170" width="104" height="46" rx="23" fill="#141d30" stroke="#34d399" stroke-width="2" stroke-dasharray="5 4"/>
+    <text x="432" y="98" fill="#e8ecf4">DOOR UP</text>
+    <text x="552" y="191" fill="#e8ecf4">MOVING</text><text x="552" y="205" fill="#e8ecf4">DOWN</text>
+    <text x="432" y="298" fill="#e8ecf4">DOOR DOWN</text>
+    <text x="404" y="191" fill="#e8ecf4">MOVING</text><text x="404" y="205" fill="#e8ecf4">UP</text>
+    <g fill="none" stroke="#94a0b8" stroke-width="2" marker-end="url(#a)">
+      <path d="M484 100q50 10 66 66"/>
+      <path d="M552 218q0 50-66 70"/>
+      <path d="M380 292q-34-22-2-72"/>
+      <path d="M404 168q0-30 20-50"/>
+      <path d="M500 196H458" stroke="#f87171" stroke-dasharray="4 4"/>
+    </g>
+    <text x="480" y="236" font-size="10" fill="#f87171">SENSOR</text>
+  </g>
+</svg>

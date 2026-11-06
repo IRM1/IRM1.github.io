@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Garage Door State Machine | Muhammad Islam Riaz</title>
+  <meta name="description" content="Four-state garage door controller on a CompactLogix PLC with one-button control, TON travel timers, and proximity-sensor safety reversal.">
+  <meta name="theme-color" content="#070b14">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../"><span class="lights" aria-hidden="true"><span></span><span></span><span></span></span>Muhammad Islam Riaz</a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="../#about">About</a><a href="../#experience">Experience</a><a href="../#skills">Skills</a><a href="../#projects">Projects</a><a class="nav-cta" href="../#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="project-hero">
+    <div class="wrap">
+      <a class="back" href="../#projects">← All projects</a>
+      <h1>CompactLogix Garage Door State Machine</h1>
+      <p>A garage door controller designed from a state transition diagram, programmed in Studio 5000 and tested on a physical lab station. One push button commands the door down and up, TON timers model 6 seconds of travel each way, and a proximity sensor reverses the door if it is tripped while closing.</p>
+      <ul class="tags"><li>Studio 5000</li><li>CompactLogix</li><li>RSLinx</li><li>State machine design</li><li>ONS one-shot</li><li>TON timers</li></ul>
+    </div>
+  </section>
+
+  <div class="wrap project-body">
+    <h2>States</h2>
+    <p>Four states: <strong>Door Up</strong>, <strong>Moving Down</strong>, <strong>Door Down</strong> and <strong>Moving Up</strong>. Pilot lights show the state: amber = moving down, green = moving up, red = stopped.</p>
+
+    <h2>I/O map</h2>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Device</th><th>Address</th></tr></thead>
+        <tbody>
+          <tr><td>Green push button</td><td><code>Local:1:I.Data.2</code></td></tr>
+          <tr><td>Proximity sensor</td><td><code>Local:1:I.Data.9</code></td></tr>
+          <tr><td>Amber light</td><td><code>Local:1:O.Data.4</code></td></tr>
+          <tr><td>Green light</td><td><code>Local:1:O.Data.2</code></td></tr>
+          <tr><td>Red light</td><td><code>Local:1:O.Data.0</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Logic highlights</h2>
+    <ul>
+      <li><strong>Rungs 0–2:</strong> Latch the sensor trip, use an ONS to turn a button press (or new trip) into one pulse, and toggle the direction with an XOR seal-in.</li>
+      <li><strong>Rungs 3–5:</strong> The down timer runs while commanded down with the door up and no trip latched. It drives amber and latches <code>state_bit</code> when done.</li>
+      <li><strong>Rungs 6–8:</strong> The up timer runs when commanded up with the door down, or on a sensor trip. It drives green and clears the state and sensor bits when done.</li>
+      <li><strong>Rung 9:</strong> Red is on whenever amber and green are both off.</li>
+    </ul>
+
+    <h2>Debugging on hardware</h2>
+    <ol class="fix-list">
+      <li><strong>The door moved by itself at power-up.</strong> Fixed by driving the timers from the push-button toggle.</li>
+      <li><strong>Amber stayed on after the door stopped.</strong> A timer's EN bit stays on as long as its rung is true, so I used <code>state_bit</code> to open the down-timer rung when the door arrives.</li>
+      <li><strong>The sensor stopped the door instead of reversing it.</strong> The up timer needed <code>state_bit = 1</code>, which is never true mid-travel. A sensor branch now bypasses it.</li>
+      <li><strong>The door closed by itself after a reversal.</strong> The direction bit still said "down", so a sensor trip now also toggles it through the one-shot rung.</li>
+    </ol>
+
+    <h2>Planned improvements</h2>
+    <ul>
+      <li>Restrict the sensor to downward travel by adding XIC <code>timer1.EN</code> in series with it, matching the state diagram.</li>
+      <li>Track mid-travel stops with an RTO so the next move starts from the real door position.</li>
+    </ul>
+
+    <h2>Screenshots</h2>
+    <div class="gallery">
+      <figure><a href="../assets/projects/garage-door/state-diagram.png"><img src="../assets/projects/garage-door/state-diagram.png" alt="State transition diagram" loading="lazy"></a><figcaption>State transition diagram with sensor reversal during downward travel.</figcaption></figure>
+      <figure><a href="../assets/projects/garage-door/ladder.png"><img src="../assets/projects/garage-door/ladder.png" alt="Ten-rung ladder logic" loading="lazy"></a><figcaption>Ten-rung ladder logic program in Studio 5000.</figcaption></figure>
+      <figure><a href="../assets/projects/garage-door/station.jpg"><img src="../assets/projects/garage-door/station.jpg" alt="Physical lab station" loading="lazy"></a><figcaption>Lab station: PLC, push buttons, pilot lights and proximity sensor, with the red light on and the door stopped.</figcaption></figure>
+    </div>
+
+    <div class="project-nav">
+      <a href="../#projects">← All projects</a>
+      <a href="https://github.com/IRM1/CONTROLS/tree/main/compactlogix-garage-door-state-machine">Project on GitHub →</a>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer"><div class="wrap"><span>© 2026 Muhammad Islam Riaz</span><span><a href="../">Home</a> · <a href="https://www.linkedin.com/in/muhammad-islam-riaz/">LinkedIn</a> · <a href="https://github.com/IRM1/CONTROLS">GitHub</a></span></div></footer>
+</body>
+</html>

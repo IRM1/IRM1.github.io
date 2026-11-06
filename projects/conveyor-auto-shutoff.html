@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Conveyor Start/Stop with Auto Shutoff | Muhammad Islam Riaz</title>
+  <meta name="description" content="CompactLogix conveyor control with a one-button start/stop toggle, a 10-second automatic shutoff, and a two-timer flashing light.">
+  <meta name="theme-color" content="#070b14">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../"><span class="lights" aria-hidden="true"><span></span><span></span><span></span></span>Muhammad Islam Riaz</a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="../#about">About</a><a href="../#experience">Experience</a><a href="../#skills">Skills</a><a href="../#projects">Projects</a><a class="nav-cta" href="../#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="project-hero">
+    <div class="wrap">
+      <a class="back" href="../#projects">← All projects</a>
+      <h1>CompactLogix Conveyor Start/Stop with Auto Shutoff</h1>
+      <p>A conveyor control program written in Studio 5000 and tested on a physical lab station. One push button starts and stops the conveyor, a TON timer shuts it off on its own after 10 seconds, and pilot lights show the conveyor state.</p>
+      <ul class="tags"><li>Studio 5000</li><li>CompactLogix</li><li>RSLinx</li><li>ONS one-shot</li><li>TON timers</li><li>Two-timer flasher</li></ul>
+    </div>
+  </section>
+
+  <div class="wrap project-body">
+    <h2>How it works</h2>
+    <p>The program combines two building blocks: a one-shot (ONS) toggle that lets one button act as both Start and Stop, and TON timers. Feeding the 10-second timer's done bit back into the one-shot lets the timer "press the button" itself and turn the system off.</p>
+    <ul>
+      <li>Left green light: on while the conveyor runs.</li>
+      <li>Right green light: flashes 500 ms on / 500 ms off while running.</li>
+      <li>Left red light: on while the conveyor is stopped.</li>
+    </ul>
+
+    <h2>I/O map</h2>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Device</th><th>Address</th></tr></thead>
+        <tbody>
+          <tr><td>Green push button (Start/Stop)</td><td><code>Local:1:I.Data.2</code></td></tr>
+          <tr><td>Red push button (Stop)</td><td><code>Local:1:I.Data.1</code></td></tr>
+          <tr><td>Left green light</td><td><code>Local:1:O.Data.2</code></td></tr>
+          <tr><td>Left red light</td><td><code>Local:1:O.Data.0</code></td></tr>
+          <tr><td>Right green light</td><td><code>Local:1:O.Data.5</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Logic highlights</h2>
+    <ul>
+      <li><strong>Rung 0:</strong> An ONS pulses <code>button_press</code> when the button is pressed or when <code>timer1.DN</code> comes on.</li>
+      <li><strong>Rung 1:</strong> An XOR seal-in toggles <code>system_run</code> on each pulse.</li>
+      <li><strong>Rungs 2–3:</strong> <code>timer1</code> (10 s) runs while the system is on, and <code>timer1.TT</code> drives the conveyor and left green light so both drop out together.</li>
+      <li><strong>Rung 4:</strong> The red light runs through an XIO of the green light, so red always means stopped.</li>
+      <li><strong>Rungs 5–7:</strong> <code>timer2</code> and <code>timer3</code> (500 ms each) reset each other to flash the right green light.</li>
+    </ul>
+
+    <h2>Debugging on hardware</h2>
+    <p class="callout">The red light first worked backwards and came on while the system was running. Driving it from an XIO contact of the left green light fixed it, so it is now on whenever the conveyor is off.</p>
+
+    <h2>Testing</h2>
+    <p>Downloaded with no errors. On hardware: Start turns on the conveyor and green light. After 10 s the system shuts off and red comes on. Stop during a run turns everything off. The flasher holds a steady 500 ms on / 500 ms off.</p>
+
+    <h2>Screenshots</h2>
+    <div class="gallery">
+      <figure><a href="../assets/projects/conveyor/ladder.png"><img src="../assets/projects/conveyor/ladder.png" alt="Eight-rung ladder logic" loading="lazy"></a><figcaption>Eight-rung ladder logic program in Studio 5000.</figcaption></figure>
+      <figure><a href="../assets/projects/conveyor/station.jpg"><img src="../assets/projects/conveyor/station.jpg" alt="Physical lab station" loading="lazy"></a><figcaption>Lab station during testing, red light on with the conveyor stopped.</figcaption></figure>
+    </div>
+
+    <div class="project-nav">
+      <a href="../#projects">← All projects</a>
+      <a href="https://github.com/IRM1/CONTROLS/tree/main/compactlogix-conveyor-auto-shutoff">Source files on GitHub (.ACD) →</a>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer"><div class="wrap"><span>© 2026 Muhammad Islam Riaz</span><span><a href="../">Home</a> · <a href="https://www.linkedin.com/in/muhammad-islam-riaz/">LinkedIn</a> · <a href="https://github.com/IRM1/CONTROLS">GitHub</a></span></div></footer>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" role="img" aria-label="Inductive proximity sensor detecting a metal target, wired to the PLC input">
+  <defs>
+    <pattern id="g" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#ffffff" stroke-opacity="0.04"/></pattern>
+    <pattern id="h" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="10" stroke="#94a0b8" stroke-opacity="0.35" stroke-width="3"/></pattern>
+  </defs>
+  <rect width="640" height="400" fill="#0c1322"/>
+  <rect width="640" height="400" fill="url(#g)"/>
+
+  <!-- terminal block -->
+  <g font-family="ui-monospace, Menlo, monospace" font-size="12">
+    <rect x="40" y="110" width="110" height="160" rx="8" fill="#141d30" stroke="#3a4766" stroke-width="2"/>
+    <circle cx="66" cy="150" r="7" fill="none" stroke="#c9d2e3" stroke-width="2"/><text x="82" y="154" fill="#c9d2e3">+24V</text>
+    <circle cx="66" cy="190" r="7" fill="none" stroke="#c9d2e3" stroke-width="2"/><text x="82" y="194" fill="#c9d2e3">0V</text>
+    <circle cx="66" cy="230" r="7" fill="none" stroke="#c9d2e3" stroke-width="2"/><text x="82" y="234" fill="#ffb627">I.9</text>
+  </g>
+
+  <!-- wires: brown, blue, black -->
+  <g fill="none" stroke-width="4" stroke-linecap="round">
+    <path d="M150 150H180q20 0 20 30v10" stroke="#a16207"/>
+    <path d="M150 190H200" stroke="#3b82f6"/>
+    <path d="M150 230H180q20 0 20-30v-10" stroke="#e8ecf4" stroke-opacity="0.75"/>
+  </g>
+
+  <!-- sensor body M30 -->
+  <rect x="200" y="160" width="40" height="60" rx="6" fill="#1c2638" stroke="#c9d2e3" stroke-width="2"/>
+  <circle cx="220" cy="174" r="6" fill="#ffb627"/>
+  <rect x="240" y="150" width="170" height="80" rx="4" fill="#141d30" stroke="#c9d2e3" stroke-width="2"/>
+  <path d="M260 150v80M278 150v80M296 150v80M314 150v80M332 150v80M350 150v80M368 150v80M386 150v80" stroke="#3a4766" stroke-width="2"/>
+  <rect x="410" y="156" width="16" height="68" rx="3" fill="#2a3650" stroke="#c9d2e3" stroke-width="2"/>
+
+  <!-- field lines -->
+  <g fill="none" stroke="#ffb627" stroke-width="2" stroke-linecap="round">
+    <path d="M440 170q12 20 0 40" stroke-opacity="0.9"/>
+    <path d="M456 156q22 34 0 68" stroke-opacity="0.6"/>
+    <path d="M472 142q32 48 0 96" stroke-opacity="0.35"/>
+  </g>
+
+  <!-- metal target -->
+  <rect x="510" y="130" width="70" height="120" rx="4" fill="#2a3650" stroke="#c9d2e3" stroke-width="2"/>
+  <rect x="510" y="130" width="70" height="120" rx="4" fill="url(#h)"/>
+
+  <g font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#94a0b8">
+    <text x="240" y="262">NPN · N.O. · 3-WIRE · M30</text>
+    <text x="510" y="276">TARGET</text>
+    <text x="40" y="310">SINKING OUTPUT → INPUT GROUP 08–15</text>
+  </g>
+</svg>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>3-Wire Start/Stop | Muhammad Islam Riaz</title>
+  <meta name="description" content="Tag-based 3-wire start/stop ladder logic on a CompactLogix PLC with an interlocked indicator light, downloaded over EtherNet/IP.">
+  <meta name="theme-color" content="#070b14">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../"><span class="lights" aria-hidden="true"><span></span><span></span><span></span></span>Muhammad Islam Riaz</a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="../#about">About</a><a href="../#experience">Experience</a><a href="../#skills">Skills</a><a href="../#projects">Projects</a><a class="nav-cta" href="../#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="project-hero">
+    <div class="wrap">
+      <a class="back" href="../#projects">← All projects</a>
+      <h1>CompactLogix 3-Wire Start/Stop</h1>
+      <p>A tag-based ladder logic program written in Studio 5000 and downloaded to a physical lab station with push buttons and pilot lights, connected over EtherNet/IP through RSLinx.</p>
+      <ul class="tags"><li>Studio 5000</li><li>CompactLogix</li><li>RSLinx</li><li>EtherNet/IP</li><li>Seal-in</li><li>Interlock</li></ul>
+    </div>
+  </section>
+
+  <div class="wrap project-body">
+    <h2>How it works</h2>
+    <ul>
+      <li><strong>Rung 0:</strong> A classic 3-wire start/stop circuit with a seal-in branch drives the System Run output (green light).</li>
+      <li><strong>Rung 1:</strong> An interlocked red light. The black push button can only latch it while System Run is active, and Stop de-energizes both outputs.</li>
+    </ul>
+
+    <h2>I/O map</h2>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Device</th><th>Address</th></tr></thead>
+        <tbody>
+          <tr><td>Stop PB</td><td><code>Local:1:I.Data.1</code></td></tr>
+          <tr><td>Start PB</td><td><code>Local:1:I.Data.2</code></td></tr>
+          <tr><td>Black PB</td><td><code>Local:1:I.Data.3</code></td></tr>
+          <tr><td>System Run</td><td><code>Local:1:O.Data.2</code></td></tr>
+          <tr><td>Red Light</td><td><code>Local:1:O.Data.3</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Fail-safe note</h2>
+    <p class="callout">This station's Stop button is wired normally open, so it is examined with XIO. In industrial practice Stop is wired normally closed and examined with XIC, so a broken wire reads as Stop pressed instead of silently disabling the stop function.</p>
+
+    <h2>Testing &amp; bring-up</h2>
+    <p>On hardware: the seal-in held after releasing Start, the red light only latched once System Run was active, and Stop cleared both outputs. Bring-up troubleshooting covered the PLC being left in Program mode and a missing Ethernet link that blocked going online.</p>
+
+    <h2>Screenshots</h2>
+    <div class="gallery">
+      <figure><a href="../assets/projects/three-wire/ladder.png"><img src="../assets/projects/three-wire/ladder.png" alt="Ladder logic" loading="lazy"></a><figcaption>Ladder logic program in Studio 5000.</figcaption></figure>
+      <figure><a href="../assets/projects/three-wire/station.jpg"><img src="../assets/projects/three-wire/station.jpg" alt="Physical lab station" loading="lazy"></a><figcaption>Lab station: CompactLogix PLC with push buttons and pilot lights.</figcaption></figure>
+    </div>
+
+    <div class="project-nav">
+      <a href="../#projects">← All projects</a>
+      <a href="https://github.com/IRM1/CONTROLS/tree/main/compactlogix-3-wire-start-stop">Project on GitHub →</a>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer"><div class="wrap"><span>© 2026 Muhammad Islam Riaz</span><span><a href="../">Home</a> · <a href="https://www.linkedin.com/in/muhammad-islam-riaz/">LinkedIn</a> · <a href="https://github.com/IRM1/CONTROLS">GitHub</a></span></div></footer>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Traffic Light Controller | Muhammad Islam Riaz</title>
+  <meta name="description" content="Two-direction traffic light controller on an Allen-Bradley CompactLogix PLC with chained TON timers, a one-shot/XOR direction toggle, and a proximity sensor skip.">
+  <meta name="theme-color" content="#070b14">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../"><span class="lights" aria-hidden="true"><span></span><span></span><span></span></span>Muhammad Islam Riaz</a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="../#about">About</a><a href="../#experience">Experience</a><a href="../#skills">Skills</a><a href="../#projects">Projects</a><a class="nav-cta" href="../#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="project-hero">
+    <div class="wrap">
+      <a class="back" href="../#projects">← All projects</a>
+      <h1>CompactLogix Traffic Light Controller</h1>
+      <p>A two-direction intersection controller built in Studio 5000 and tested on a physical lab station. Four chained TON timers run the light sequence, a one-shot and XOR toggle alternate the direction, and a proximity sensor switches green to amber early when traffic is detected.</p>
+      <ul class="tags"><li>Studio 5000</li><li>CompactLogix</li><li>RSLinx</li><li>TON timers</li><li>ONS one-shot</li><li>XOR toggle</li><li>EQU/GRT compares</li><li>Proximity sensor</li></ul>
+    </div>
+  </section>
+
+  <div class="wrap project-body">
+    <h2>How it works</h2>
+    <p>A Start/Stop push button runs the system. On start, both directions show red for 9 seconds. The lights then run a continuous Green → Amber → Red sequence that alternates between the two directions. If a green light has been on for at least 5 seconds and the sensor detects an object, the system switches to amber early.</p>
+    <p>Each phase's DN bit starts the next phase, and each phase's TT bit keeps its light on while the timer runs.</p>
+
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Phase</th><th>Duration</th><th>Lights</th></tr></thead>
+        <tbody>
+          <tr><td>Initialization (once after Start)</td><td>9 s</td><td>Both reds</td></tr>
+          <tr><td>Green</td><td>9 s</td><td>Active side green, other side red</td></tr>
+          <tr><td>Amber</td><td>6 s</td><td>Active side amber, other side red</td></tr>
+          <tr><td>All-red</td><td>3 s</td><td>Both reds, then the direction switches</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>I/O map</h2>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Device</th><th>Address</th></tr></thead>
+        <tbody>
+          <tr><td>Start push button</td><td><code>Local:1:I.Data.2</code></td></tr>
+          <tr><td>Stop push button</td><td><code>Local:1:I.Data.1</code></td></tr>
+          <tr><td>Proximity sensor</td><td><code>Local:1:I.Data.9</code></td></tr>
+          <tr><td>Left red / amber / green</td><td><code>Local:1:O.Data.0</code> / <code>.1</code> / <code>.2</code></td></tr>
+          <tr><td>Right red / amber / green</td><td><code>Local:1:O.Data.3</code> / <code>.4</code> / <code>.5</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Logic highlights</h2>
+    <ul>
+      <li><strong>Rungs 0–4:</strong> Start/Stop seal-in, then the four phase timers: <code>TIMER1</code> (9 s init), <code>TGREEN</code> (9 s), <code>TAMBER</code> (6 s), and <code>TRED</code> (3 s).</li>
+      <li><strong>Rungs 6–7:</strong> Each red light is on during initialization, during all-red, and while the opposite side is green or amber.</li>
+      <li><strong>Rungs 8–9:</strong> An ONS on <code>TRED.DN</code> pulses once per cycle and feeds a single XOR rung that flips the direction.</li>
+      <li><strong>Rungs 10–13:</strong> Green and amber are driven by <code>TGREEN.TT</code> and <code>TAMBER.TT</code>, gated by the direction bit.</li>
+      <li><strong>Rung 14:</strong> If green is on, <code>TGREEN.ACC</code> ≥ 5000 ms (EQU/GRT pair), and the sensor detects an object, <code>SENSORON</code> latches to switch to amber immediately.</li>
+    </ul>
+
+    <h2>Debugging on hardware</h2>
+    <ol class="fix-list">
+      <li><strong>The sensor didn't actually end the green phase.</strong> Amber came on, but the green timer kept running and the amber timer never started, so the lights flickered. I made the sensor bit a latch (<code>SENSORON</code>) that resets the green timer and starts the amber timer.</li>
+      <li><strong>The direction sometimes switched twice.</strong> Latching and unlatching the direction on different timer bits let the same side run twice in a row. I replaced that with a one-shot on the all-red done bit feeding a single XOR rung, so the direction flips exactly once per cycle.</li>
+    </ol>
+
+    <h2>Testing</h2>
+    <p>Downloaded with no errors. On hardware: Start gives 9 s of both reds, then the right side runs green, amber and all-red, and the left side follows. Stop halts the system and resets the direction. Triggering the sensor after 5 s of green switches to amber immediately.</p>
+
+    <h2>Screenshots</h2>
+    <div class="gallery">
+      <figure><a href="../assets/projects/traffic-light/timing-diagram.png"><img src="../assets/projects/traffic-light/timing-diagram.png" alt="Timing diagram" loading="lazy"></a><figcaption>Timing diagram: 9 s initialization, then alternating green, amber and all-red phases for each side.</figcaption></figure>
+      <figure><a href="../assets/projects/traffic-light/ladder-rungs-0-6.png"><img src="../assets/projects/traffic-light/ladder-rungs-0-6.png" alt="Ladder logic rungs 0 to 6" loading="lazy"></a><figcaption>Rungs 0–6: seal-in, the four phase timers, sensor-bit reset, and right red light.</figcaption></figure>
+      <figure><a href="../assets/projects/traffic-light/ladder-rungs-7-13.png"><img src="../assets/projects/traffic-light/ladder-rungs-7-13.png" alt="Ladder logic rungs 7 to 13" loading="lazy"></a><figcaption>Rungs 7–13: left red light, one-shot and XOR direction toggle, green/amber outputs.</figcaption></figure>
+      <figure><a href="../assets/projects/traffic-light/ladder-rung-14.png"><img src="../assets/projects/traffic-light/ladder-rung-14.png" alt="Ladder logic rung 14" loading="lazy"></a><figcaption>Rung 14: sensor skip using EQU/GRT compares on the green timer.</figcaption></figure>
+      <figure><a href="../assets/projects/traffic-light/station.jpg"><img src="../assets/projects/traffic-light/station.jpg" alt="Physical lab station" loading="lazy"></a><figcaption>Lab station during testing: CompactLogix PLC, push buttons, proximity sensor and the two light stacks.</figcaption></figure>
+    </div>
+
+    <div class="project-nav">
+      <a href="../#projects">← All projects</a>
+      <a href="https://github.com/IRM1/CONTROLS/tree/main/compactlogix-traffic-light-controller">Source files on GitHub (.ACD) →</a>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer"><div class="wrap"><span>© 2026 Muhammad Islam Riaz</span><span><a href="../">Home</a> · <a href="https://www.linkedin.com/in/muhammad-islam-riaz/">LinkedIn</a> · <a href="https://github.com/IRM1/CONTROLS">GitHub</a></span></div></footer>
+</body>
+</html>

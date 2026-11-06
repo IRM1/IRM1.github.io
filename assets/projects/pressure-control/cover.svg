@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" role="img" aria-label="Air receiver tank with a pressure gauge in the 90 to 110 psi band, fed by a pump">
+  <defs>
+    <pattern id="g" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#ffffff" stroke-opacity="0.04"/></pattern>
+  </defs>
+  <rect width="640" height="400" fill="#0c1322"/>
+  <rect width="640" height="400" fill="url(#g)"/>
+
+  <!-- pump + motor -->
+  <circle cx="110" cy="270" r="40" fill="#141d30" stroke="#c9d2e3" stroke-width="2"/>
+  <path d="M110 236v68M76 270h68" stroke="#3a4766" stroke-width="2"/>
+  <path d="M92 252l36 36M128 252l-36 36" stroke="#34d399" stroke-width="3" stroke-linecap="round"/>
+  <text x="110" y="336" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#94a0b8">PUMP</text>
+
+  <!-- pipe -->
+  <path d="M150 270H230" stroke="#c9d2e3" stroke-width="6"/>
+  <path d="M176 262l14 8-14 8" fill="none" stroke="#34d399" stroke-width="2"/>
+
+  <!-- receiver tank -->
+  <rect x="230" y="210" width="330" height="120" rx="60" fill="#141d30" stroke="#c9d2e3" stroke-width="2"/>
+  <path d="M290 330v26M500 330v26M270 356h40M480 356h40" stroke="#94a0b8" stroke-width="3"/>
+  <text x="395" y="278" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="14" fill="#64708a">RECEIVER</text>
+
+  <!-- gauge -->
+  <line x1="395" y1="210" x2="395" y2="176" stroke="#c9d2e3" stroke-width="4"/>
+  <circle cx="395" cy="112" r="66" fill="#0c1322" stroke="#c9d2e3" stroke-width="3"/>
+  <!-- scale 0..150 over 240deg; band 90-110 -->
+  <path d="M348.3 158.7A66 66 0 1 1 441.7 158.7" fill="none" stroke="#2a3650" stroke-width="8"/>
+  <path d="M438.3 75.4A56 56 0 0 1 450.8 106.2" fill="none" stroke="#34d399" stroke-width="10"/>
+  <line x1="395" y1="112" x2="440" y2="86" stroke="#ffb627" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="395" cy="112" r="6" fill="#ffb627"/>
+  <text x="395" y="150" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#e8ecf4">psi</text>
+
+  <!-- switches -->
+  <g font-family="ui-monospace, Menlo, monospace" font-size="12">
+    <rect x="500" y="70" width="96" height="30" rx="6" fill="#141d30" stroke="#f87171" stroke-width="2"/>
+    <text x="512" y="90" fill="#e8ecf4">PSH 110</text>
+    <rect x="500" y="112" width="96" height="30" rx="6" fill="#141d30" stroke="#38bdf8" stroke-width="2"/>
+    <text x="512" y="132" fill="#e8ecf4">PSL  90</text>
+    <text x="40" y="80" fill="#94a0b8">DEADBAND</text>
+    <text x="40" y="104" fill="#34d399" font-size="22" font-weight="600">90–110 psi</text>
+  </g>
+</svg>

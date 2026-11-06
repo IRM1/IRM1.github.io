@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" role="img" aria-label="DC motor with a 5 second timer, E-stop and pilot lights">
+  <defs>
+    <pattern id="g" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#ffffff" stroke-opacity="0.04"/></pattern>
+  </defs>
+  <rect width="640" height="400" fill="#0c1322"/>
+  <rect width="640" height="400" fill="url(#g)"/>
+
+  <!-- motor -->
+  <g stroke="#c9d2e3" stroke-width="2">
+    <rect x="70" y="130" width="200" height="140" rx="18" fill="#141d30"/>
+    <path d="M100 130v140M130 130v140M160 130v140M190 130v140M220 130v140" stroke="#3a4766"/>
+    <rect x="270" y="170" width="26" height="60" rx="4" fill="#1c2638"/>
+    <line x1="296" y1="200" x2="350" y2="200" stroke-width="8" stroke-linecap="round"/>
+    <rect x="100" y="270" width="140" height="18" rx="3" fill="#1c2638"/>
+  </g>
+  <circle cx="170" cy="200" r="34" fill="#0c1322" stroke="#34d399" stroke-width="3"/>
+  <text x="170" y="210" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="28" font-weight="700" fill="#e8ecf4">M</text>
+  <text x="170" y="320" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#94a0b8">24 VDC</text>
+  <!-- rotation arrows -->
+  <path d="M362 176a34 34 0 0 1 0 48" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- TON timer -->
+  <g font-family="ui-monospace, Menlo, monospace">
+    <rect x="410" y="48" width="180" height="120" rx="12" fill="#141d30" stroke="#3a4766" stroke-width="2"/>
+    <text x="428" y="76" font-size="12" fill="#94a0b8">TON  timer</text>
+    <text x="428" y="100" font-size="12" fill="#94a0b8">PRE  5000</text>
+    <text x="428" y="124" font-size="12" fill="#94a0b8">ACC</text>
+    <text x="466" y="124" font-size="12" fill="#ffb627">3150</text>
+    <rect x="428" y="138" width="144" height="10" rx="5" fill="#1f2a40"/>
+    <rect x="428" y="138" width="91" height="10" rx="5" fill="#ffb627"/>
+  </g>
+
+  <!-- E-stop -->
+  <circle cx="460" cy="285" r="52" fill="#ffd23f" opacity="0.9"/>
+  <circle cx="460" cy="285" r="34" fill="#dc2626" stroke="#7f1d1d" stroke-width="3"/>
+  <text x="460" y="360" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#94a0b8">E-STOP</text>
+
+  <!-- pilot lights -->
+  <circle cx="560" cy="250" r="14" fill="#34d399"/>
+  <circle cx="560" cy="300" r="14" fill="#1f2a40" stroke="#f87171" stroke-width="2"/>
+</svg>

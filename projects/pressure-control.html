@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Compressor Receiver Pressure Control | Muhammad Islam Riaz</title>
+  <meta name="description" content="SLC 500 ladder logic that keeps compressor receiver pressure in a 90–110 psi deadband using two pressure switches, one pump, and a run light.">
+  <meta name="theme-color" content="#070b14">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../"><span class="lights" aria-hidden="true"><span></span><span></span><span></span></span>Muhammad Islam Riaz</a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="../#about">About</a><a href="../#experience">Experience</a><a href="../#skills">Skills</a><a href="../#projects">Projects</a><a class="nav-cta" href="../#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="project-hero">
+    <div class="wrap">
+      <a class="back" href="../#projects">← All projects</a>
+      <h1>Compressor Receiver Pressure Control</h1>
+      <p>A ladder logic project for an Allen-Bradley SLC 500, built in RSLogix 500 and run in Emulate 500. It keeps receiver pressure in a 90–110 psi deadband using two pressure switches, one pump and a run indicator light.</p>
+      <ul class="tags"><li>RSLogix 500</li><li>SLC 500</li><li>Emulate 500</li><li>Deadband control</li><li>Seal-in</li><li>TON timers</li></ul>
+    </div>
+  </section>
+
+  <div class="wrap project-body">
+    <h2>I/O list</h2>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Address</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>I:0/0</code></td><td>Input</td><td>Low pressure switch (90 psi)</td></tr>
+          <tr><td><code>I:0/1</code></td><td>Input</td><td>High pressure switch (110 psi)</td></tr>
+          <tr><td><code>O:0/0</code></td><td>Output</td><td>Pump</td></tr>
+          <tr><td><code>O:0/1</code></td><td>Output</td><td>Run indicator light</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Concepts</h2>
+    <p>Deadband control, seal-in latching and TON timers. The pump starts at low pressure and a seal-in keeps it running after the low switch clears, so it fills all the way to 110 psi instead of cycling on and off around 90 psi. An I/O subroutine maps the physical I/O to internal bits.</p>
+    <h2>Validation</h2>
+    <p>Tested in Emulate 500 across all four combinations of the two switch inputs. The pump and run light track the correct state in each case.</p>
+    <p class="callout">Training project, run in emulation and not deployed.</p>
+
+    <h2>Ladder logic</h2>
+    <div class="gallery">
+      <figure><a href="../assets/projects/pressure-control/main-program.png"><img src="../assets/projects/pressure-control/main-program.png" alt="Main program" loading="lazy"></a><figcaption>Main program: pump/light control, timers and seal-in logic.</figcaption></figure>
+      <figure><a href="../assets/projects/pressure-control/io-subroutine.png"><img src="../assets/projects/pressure-control/io-subroutine.png" alt="I/O subroutine" loading="lazy"></a><figcaption>I/O subroutine: maps physical I/O to internal bits.</figcaption></figure>
+    </div>
+
+    <div class="project-nav">
+      <a href="../#projects">← All projects</a>
+      <a href="https://github.com/IRM1/CONTROLS/tree/main/pressure-control">Source files on GitHub (.RSS, spec PDF) →</a>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer"><div class="wrap"><span>© 2026 Muhammad Islam Riaz</span><span><a href="../">Home</a> · <a href="https://www.linkedin.com/in/muhammad-islam-riaz/">LinkedIn</a> · <a href="https://github.com/IRM1/CONTROLS">GitHub</a></span></div></footer>
+</body>
+</html>

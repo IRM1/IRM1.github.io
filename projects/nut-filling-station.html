@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nut Filling Station | Muhammad Islam Riaz</title>
+  <meta name="description" content="RSLogix 500 conveyor project that routes red- and blue-labeled boxes to the correct hopper and runs the fill cycle automatically.">
+  <meta name="theme-color" content="#070b14">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../"><span class="lights" aria-hidden="true"><span></span><span></span><span></span></span>Muhammad Islam Riaz</a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="../#about">About</a><a href="../#experience">Experience</a><a href="../#skills">Skills</a><a href="../#projects">Projects</a><a class="nav-cta" href="../#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="project-hero">
+    <div class="wrap">
+      <a class="back" href="../#projects">← All projects</a>
+      <h1>Nut Filling Station</h1>
+      <p>A conveyor-based filling station built in RSLogix 500. A proximity switch detects each box, a red or blue photo eye reads its label, and the matching hopper fills it (pecans for red, walnuts for blue) until a level switch says it's full.</p>
+      <ul class="tags"><li>RSLogix 500</li><li>SLC 500</li><li>One-shots</li><li>Photo eyes</li><li>Level switch</li><li>Sequencing</li></ul>
+    </div>
+  </section>
+
+  <div class="wrap project-body">
+    <h2>I/O map</h2>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Address</th><th>Device</th><th>Function</th></tr></thead>
+        <tbody>
+          <tr><td><code>I:0/0</code></td><td>Proximity switch</td><td>Closes when a box is near</td></tr>
+          <tr><td><code>I:0/1</code></td><td>Level switch</td><td>Closes when the box is full</td></tr>
+          <tr><td><code>I:0/2</code></td><td>Red photo eye</td><td>Closes on a red label</td></tr>
+          <tr><td><code>I:0/3</code></td><td>Blue photo eye</td><td>Closes on a blue label</td></tr>
+          <tr><td><code>O:0/0</code></td><td>Conveyor motor</td><td>Runs the conveyor forward</td></tr>
+          <tr><td><code>O:0/1</code></td><td>Walnut hopper</td><td>Opens solenoid to release walnuts</td></tr>
+          <tr><td><code>O:0/2</code></td><td>Pecan hopper</td><td>Opens solenoid to release pecans</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Approach</h2>
+    <p>I handled the process as one repeating cycle rather than a set of independent reactions:</p>
+    <ul>
+      <li>The conveyor runs whenever no box is in position. A one-shot off the proximity switch breaks that seal-in the instant a box arrives.</li>
+      <li>Rising-edge one-shots on each photo eye fire the correct hopper <strong>once per box</strong>, so it can't re-open and overfill while the same label sits in front of the eye.</li>
+      <li>A hopper only energizes while the proximity switch is made, so a label read with no box in place can't dump product on the floor.</li>
+      <li>A one-shot off the level switch drops both hoppers and restarts the conveyor, ending the cycle and bringing in the next box.</li>
+    </ul>
+    <p class="callout"><strong>Assumption:</strong> every box carries a red or blue label. An unlabeled box stops at the station without filling.</p>
+
+    <h2>Validation</h2>
+    <p>I force-tested every I/O point in Emulate 500 against the project's full pass/fail criteria: conveyor start and stop, correct hopper selection for each label, and cycle reset.</p>
+
+    <h2>Ladder logic</h2>
+    <div class="gallery">
+      <figure><a href="../assets/projects/nut-filling/control-logic.png"><img src="../assets/projects/nut-filling/control-logic.png" alt="Control logic" loading="lazy"></a><figcaption>Control logic.</figcaption></figure>
+      <figure><a href="../assets/projects/nut-filling/io-mapping.png"><img src="../assets/projects/nut-filling/io-mapping.png" alt="I/O mapping" loading="lazy"></a><figcaption>I/O mapping.</figcaption></figure>
+    </div>
+
+    <div class="project-nav">
+      <a href="../#projects">← All projects</a>
+      <a href="https://github.com/IRM1/CONTROLS/tree/main/NutFillingStation">Source files on GitHub (.RSS, spec PDF) →</a>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer"><div class="wrap"><span>© 2026 Muhammad Islam Riaz</span><span><a href="../">Home</a> · <a href="https://www.linkedin.com/in/muhammad-islam-riaz/">LinkedIn</a> · <a href="https://github.com/IRM1/CONTROLS">GitHub</a></span></div></footer>
+</body>
+</html>
